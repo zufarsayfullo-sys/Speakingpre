@@ -1,0 +1,65 @@
+
+<!DOCTYPE html><html lang="en"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Pre-Intermediate Speaking Exam</title>    <style>        :root {            --primary: #6366f1;            --accent: #f43f5e;            --bg-dark: #0f172a;        }
+        body {            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;            margin: 0;            padding: 0;            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),                         url('https://images.unsplash.com/photo-1434031211128-095490e7e7bb?auto=format&fit=crop&q=80&w=2070');            background-size: cover;            background-attachment: fixed;            color: white;            min-height: 100vh;            display: flex;            flex-direction: column;            align-items: center;            overflow-x: hidden;        }
+        .clue { position: absolute; background: rgba(255, 255, 255, 0.08); padding: 10px 18px; border-radius: 20px; font-size: 0.85rem; color: #cbd5e1; pointer-events: none; animation: float 12s infinite ease-in-out; border: 1px solid rgba(255,255,255,0.1); z-index: 0; white-space: nowrap; }
+        @keyframes float { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 33% { transform: translate(15px, -25px) rotate(3deg); } 66% { transform: translate(-10px, 15px) rotate(-3deg); } }
+        header { margin: 30px 0; text-align: center; z-index: 1; }
+        .container { width: 90%; max-width: 800px; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(15px); padding: 40px; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); z-index: 10; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        input[type="text"] { padding: 15px; width: 80%; border-radius: 8px; border: 1px solid var(--primary); background: rgba(255,255,255,0.1); color: white; font-size: 1.1rem; margin-bottom: 20px; outline: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; }
+        .card-btn { background: rgba(99, 102, 241, 0.1); border: 1px solid var(--primary); color: white; padding: 18px; border-radius: 12px; cursor: pointer; transition: all 0.3s; }
+        .card-btn:hover { background: var(--primary); transform: scale(1.05); }
+        .hidden { display: none; } #timer { font-size: 4rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
+        .mic-wave { width: 70px; height: 70px; background: var(--accent); border-radius: 50%; margin: 15px auto; display: none; align-items: center; justify-content: center; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(244, 63, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); } }
+        .btn-main { background: #10b981; color: white; border: none; padding: 15px 35px; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin: 10px; }
+        .warning-box { background: rgba(244, 63, 94, 0.2); border: 1px solid var(--accent); padding: 20px; border-radius: 12px; margin: 20px 0; color: #fda4af; font-weight: bold; }
+    </style></head><body>
+    <div class="clue" style="top: 15%; left: 5%;">"To be honest..."</div>
+    <header><h1>Pre-Intermediate Speaking Exam</h1></header>
+    <div class="container" id="name-screen">
+        <h2>Welcome</h2>
+        <p>Please enter your full name to start the exam:</p>
+        <input type="text" id="user-name" placeholder="Full Name" autocomplete="off">
+        <br><button class="btn-main" onclick="showMenu()">Continue to Cards</button>
+    </div>
+    <div class="container hidden" id="menu-screen"><h2>Select Your Card</h2><div class="grid" id="card-grid"></div></div>
+    <div class="container hidden" id="exam-screen">
+        <h2 id="card-display-title">Card</h2>
+        <h3 id="part-indicator" style="color: #94a3b8;">Part 1</h3>
+        <div id="question-box">
+            <p id="question-text" style="font-size: 1.6rem; margin-bottom: 30px; line-height: 1.4;">Waiting...</p>
+            <div id="timer-ui" class="hidden"><div class="mic-wave" id="mic-animation">🎙️</div><div id="timer">30</div></div>
+            <button id="start-q-btn" class="btn-main" onclick="startQuestionTimer()">Start Recording</button>
+            <button id="next-btn" class="btn-main hidden" onclick="prepareNextQuestion()">Next Question</button>
+        </div>
+    </div>
+    <div class="container hidden" id="result-screen">
+        <h2 id="final-status">Uploading...</h2>
+        <div class="warning-box" id="warning-area">⚠️ WARNING: DO NOT CLOSE THIS PAGE YET.<br>Your audio is being sent to the teacher.</div>
+        <p id="done-message">Processing your results.</p>
+        <button onclick="location.reload()" style="background:none; border:none; color:gray; cursor:pointer; text-decoration: underline;">Take another test</button>
+    </div>
+    <script>
+        const cards = {
+            'A': { topic: 'Childhood & Habits', questions: ["Can you remember your childhood?", "Was it interesting and happy?", "Where did you live?", "What was your hobby in your childhood?", "How did people use to communicate before mobile phones were invented?", "Did people use to have more time for family in the past?", "Describe a place you liked spending time in your childhood.", "Speak about your habit you want to give up /stop, but you can't."] },
+            'B': { topic: 'Happiness & Personality', questions: ["Do you always feel happy?", "Do you like meeting new people?", "Are you a sociable person?", "Do you easily make friends?", "Is it better to be an introvert or extrovert?", "What are the main personal characteristics of introverted people?", "What are introverts good at?", "Do introverts have any problems?"] },
+            'C': { topic: 'School & Education', questions: ["What is your favourite subject at school?", "What do you like about your school?", "Do you always do your homework on time?", "How much time do you spend on it?", "What rules are there at schools in Uzbekistan?", "How do you feel about taking exams?", "Which countries have the best education system?", "What subject would you like to learn better?"] },
+            'D': { topic: 'News & Media', questions: ["Do you like reading news?", "Do you use the social media to read news?", "How often do you read news?", "What news sources are the most popular in your country?", "Do we read more or less news compared to the past?", "How did people use to get news in the past?", "Do you think news was more positive in the past?", "Do you think newspapers will disappear in the future?"] },
+            'E': { topic: 'Leisure & Hometown', questions: ["How do you usually spend your weekends?", "Who do you usually spend them with?", "Do you like indoor or outdoor activities?", "Do you prefer reading books or watching movies?", "Describe your hometown.", "Talk about your recent holiday.", "What is your favorite food?", "How often do you cook it in your family?"] },
+            'F': { topic: 'Weather & Money', questions: ["What is your favorite type of weather?", "Why do you like it?", "Do you like when it rains? Why/Why not?", "Does the weather change your mood?", "How do you usually save money?", "Do you prefer using cash or a credit card? Why?", "Do you give money to charity? Why or why not?", "Do you often borrow money? If yes, when?"] },
+            'G': { topic: 'Internet & Technology', questions: ["How often do you use the internet?", "How much time a day do you spend there?", "Do you buy things online?", "Do you use social media?", "Speak about your favorite websites or apps.", "What do you usually do on the internet?", "Do you use the internet for study?", "Do you think people spend too much time online? Why or why not?"] },
+            'H': { topic: 'Health & Career', questions: ["How often do you exercise?", "Do you usually have a healthy diet? Why or why not?", "What do you do to stay healthy?", "How many hours do you sleep a day?", "Speak about your dream job.", "What skills are important for your job or the job you want?", "What do you like most about your job or studies?", "Do you prefer working alone or in a team? Why?"] },
+            'I': { topic: 'Growth & Objects', questions: ["What new skills have you learned recently?", "How do you feel about changes in your life?", "Describe a challenge you had and won.", "How do you plan your future goals?", "What is your favorite object in your room?", "How do you organize your things at home?", "Do you have any collections? What do you collect?", "Describe a special gift you received."] },
+            'J': { topic: 'Travel & Learning', questions: ["Where would you like to travel next?", "How do you plan your trips?", "What is the most interesting place you have visited?", "How do you stay safe while traveling?", "What languages do you speak?", "How do you practice a new language?", "Describe a fun way you have learned something new.", "What is your favorite subject in school?"] }
+        };
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymSyhzgnVgeV7x33yrTLNsfLJywDTY8G5Wv9IGWGAwcjxDZzymszYi3BacTIvCrjI/exec";
+        let userName = "", currentCardID = "", currentCard = null, currentIdx = 0, timerVal = 30, timerInterval, mediaRecorder, audioChunks = [];
+        function showMenu() { userName = document.getElementById('user-name').value.trim(); if (!userName) { alert("Please enter your name."); return; } document.getElementById('name-screen').classList.add('hidden'); document.getElementById('menu-screen').classList.remove('hidden'); const grid = document.getElementById('card-grid'); grid.innerHTML = ""; Object.keys(cards).forEach(key => { const btn = document.createElement('button'); btn.className = 'card-btn'; btn.innerHTML = `<strong>CARD ${key}</strong><br><small>${cards[key].topic}</small>`; btn.onclick = () => startExam(key); grid.appendChild(btn); }); }
+        async function startExam(key) { currentCardID = key; currentCard = cards[key]; currentIdx = 0; try { const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); mediaRecorder = new MediaRecorder(stream); mediaRecorder.ondataavailable = e => audioChunks.push(e.data); mediaRecorder.onstop = autoUpload; mediaRecorder.start(); document.getElementById('menu-screen').classList.add('hidden'); document.getElementById('exam-screen').classList.remove('hidden'); document.getElementById('card-display-title').innerText = `Card ${key}: ${currentCard.topic}`; prepareQuestion(); } catch (err) { alert("Microphone access denied."); } }
+        function prepareQuestion() { if (currentIdx >= currentCard.questions.length) { finishExam(); return; } document.getElementById('part-indicator').innerText = currentIdx < 4 ? "Part 1" : "Part 2"; document.getElementById('question-text').innerText = currentCard.questions[currentIdx]; document.getElementById('timer-ui').classList.add('hidden'); document.getElementById('mic-animation').style.display = 'none'; document.getElementById('start-q-btn').classList.remove('hidden'); document.getElementById('next-btn').classList.add('hidden'); }
+        function startQuestionTimer() { document.getElementById('start-q-btn').classList.add('hidden'); document.getElementById('timer-ui').classList.remove('hidden'); document.getElementById('mic-animation').style.display = 'flex'; document.getElementById('next-btn').classList.remove('hidden'); timerVal = 30; document.getElementById('timer').innerText = timerVal; timerInterval = setInterval(() => { timerVal--; document.getElementById('timer').innerText = timerVal; if (timerVal <= 0) prepareNextQuestion(); }, 1000); }
+        function prepareNextQuestion() { clearInterval(timerInterval); currentIdx++; prepareQuestion(); }
+        function finishExam() { mediaRecorder.stop(); document.getElementById('exam-screen').classList.add('hidden'); document.getElementById('result-screen').classList.remove('hidden'); }
+        async function autoUpload() { const blob = new Blob(audioChunks, { type: 'audio/webm' }); const reader = new FileReader(); reader.readAsDataURL(blob); reader.onloadend = async () => { const base64 = reader.result.split(',')[1]; try { await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ audio: base64, name: userName + " (Pre-Int Card " + currentCardID + ")" }) }); document.getElementById('final-status').innerText = "Exam Sent Successfully!"; document.getElementById('done-message').innerText = `Well done, ${userName}! Your test has been received.`; document.getElementById('warning-area').style.display = "none"; } catch (e) { document.getElementById('final-status').innerText = "Upload Failed"; document.getElementById('warning-area').innerText = "❌ ERROR: Submission failed. Check your internet connection."; } }; }
+    </script></body></html>
